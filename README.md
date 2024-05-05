@@ -17,6 +17,7 @@ Technology stack:
     4️⃣ PostgreSQL database;
     5️⃣ Hibernate;
     6️⃣ Spring Security (as basic authentication).
+    7️⃣ Docker 🐳
 
 ##### To run this application use:
 
