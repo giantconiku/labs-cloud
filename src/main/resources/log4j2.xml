@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="60">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%highlight{%d{yyyy-MM-dd' ⁓ 'HH:mm:ss.SSSXXX}   %-5level   %pid --- [%thread] %logger{40} : %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=cyan, TRACE=blue}"/>
+        </Console>
+        <RollingFile name="File"
+                     fileName="var/log/application.log"
+                     filePattern="var/log/application-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd' ⁓ 'HH:mm:ss.SSSXXX}   %-5level   %pid --- [%thread] %logger{40} : %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10000KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="2"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+        <Logger name="com.giant.springbootrestapipostgresql" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>

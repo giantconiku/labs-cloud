@@ -1,6 +1,6 @@
 FROM eclipse-temurin:19-alpine
-RUN mkdir -p /var/logs
-VOLUME /var/logs
+RUN mkdir -p /var/log
+VOLUME /var/log
 EXPOSE 8080
 WORKDIR /app
 COPY target/*.jar labs-app.jar
