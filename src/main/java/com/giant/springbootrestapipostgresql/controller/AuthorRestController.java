@@ -1,73 +1,81 @@
 package com.giant.springbootrestapipostgresql.controller;
 
 import com.giant.springbootrestapipostgresql.entity.Author;
-import com.giant.springbootrestapipostgresql.repository.AuthorRepository;
+import com.giant.springbootrestapipostgresql.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorRestController {
 
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
     @Autowired
-    public AuthorRestController(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
+    public AuthorRestController(AuthorService authorService) {
+        this.authorService = authorService;
     }
 
     @PostMapping
-    public ResponseEntity<Author> addAuthor(@RequestBody Author author) {
-        return new ResponseEntity<>(authorRepository.save(author), HttpStatus.CREATED);
+    public ResponseEntity<Author> add(@RequestBody Author author) {
+
+        Author addedAuthor = authorService.add(author);
+        return new ResponseEntity<>(addedAuthor, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Author>> getAllAuthors() {
-        return new ResponseEntity<>(authorRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<Collection<Author>> getAll() {
+
+        Collection<Author> authors = authorService.getAll();
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> getAuthorById(@PathVariable Long id) {
-        return new ResponseEntity<>(authorRepository.findById(id).get(), HttpStatus.OK);
+    public ResponseEntity<Author> getById(@PathVariable Long id) {
+
+        Author author = authorService.getById(id);
+
+        if (author != null) {
+            return new ResponseEntity<>(author, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(params = {"firstName"})
-    public ResponseEntity<Collection<Author>> findAuthorsByFirstName(@RequestParam(value = "firstName") String firstName) {
-        return new ResponseEntity<>(authorRepository.findByFirstName(firstName), HttpStatus.OK);
+    public ResponseEntity<Collection<Author>> getByFirstName(@RequestParam(value = "firstName") String firstName) {
+
+        Collection<Author> authors = authorService.getByFirstName(firstName);
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> updateAuthor(@PathVariable("id") long id, @RequestBody Author author) {
+    public ResponseEntity<Author> updateById(@PathVariable("id") long id, @RequestBody Author author) {
 
-        Optional<Author> currentAuthorOpt = authorRepository.findById(id);
+        Author updatedAuthor = authorService.updateById(id, author);
 
-        if (currentAuthorOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (updatedAuthor != null) {
+            return new ResponseEntity<>(updatedAuthor, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        Author currentAuthor = currentAuthorOpt.get();
-        currentAuthor.setFirstName(author.getFirstName());
-        currentAuthor.setLastName(author.getLastName());
-        currentAuthor.setBirthYear(author.getBirthYear());
-        currentAuthor.setBiography(author.getBiography());
-        currentAuthor.setEmail(author.getEmail());
-        currentAuthor.setIsbns(author.getIsbns());
-
-        return new ResponseEntity<>(authorRepository.save(currentAuthor), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAuthorById(@PathVariable Long id) {
-        authorRepository.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+
+        authorService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
-    public void deleteAllAuthors() {
-        authorRepository.deleteAll();
+    public ResponseEntity<Void> deleteAll() {
+
+        authorService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

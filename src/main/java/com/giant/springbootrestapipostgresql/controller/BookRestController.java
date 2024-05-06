@@ -1,70 +1,81 @@
 package com.giant.springbootrestapipostgresql.controller;
 
 import com.giant.springbootrestapipostgresql.entity.Book;
-import com.giant.springbootrestapipostgresql.repository.BookRepository;
+import com.giant.springbootrestapipostgresql.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
 public class BookRestController {
 
-    private final BookRepository bookRepository;
+    private final BookService bookService;
 
     @Autowired
-    public BookRestController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookRestController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        return new ResponseEntity<>(bookRepository.save(book), HttpStatus.CREATED);
+    public ResponseEntity<Book> add(@RequestBody Book book) {
+
+        Book addedBook = bookService.add(book);
+        return new ResponseEntity<>(addedBook, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Book>> getAllBooks() {
-        return new ResponseEntity<>(bookRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<Collection<Book>> getAll() {
+
+        Collection<Book> books = bookService.getAll();
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return new ResponseEntity<Book>(bookRepository.findById(id).get(), HttpStatus.OK);
+    public ResponseEntity<Book> getById(@PathVariable Long id) {
+
+        Book book = bookService.getById(id);
+
+        if (book != null) {
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(params = {"title"})
-    public ResponseEntity<Collection<Book>> findBookByTitle(@RequestParam(value = "title") String title) {
-        return new ResponseEntity<>(bookRepository.findByTitle(title), HttpStatus.OK);
+    public ResponseEntity<Collection<Book>> getByTitle(@RequestParam(value = "title") String title) {
+
+        Collection<Book> books = bookService.getByTitle(title);
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable("id") long id, @RequestBody Book book) {
+    public ResponseEntity<Book> updateById(@PathVariable("id") long id, @RequestBody Book book) {
 
-        Optional<Book> currentBookOpt = bookRepository.findById(id);
+        Book updatedBook = bookService.updateById(id, book);
 
-        if (currentBookOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (updatedBook != null) {
+            return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        Book currentBook = currentBookOpt.get();
-        currentBook.setName(book.getTitle());
-        currentBook.setDescription(book.getDescription());
-        currentBook.setTags(book.getTags());
-
-        return new ResponseEntity<>(bookRepository.save(currentBook), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBookById(@PathVariable Long id) {
-        bookRepository.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+
+        bookService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
-    public void deleteAllBooks() {
-        bookRepository.deleteAll();
+    public ResponseEntity<Void> deleteAll() {
+
+        bookService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
