@@ -11,13 +11,16 @@
 
 Technology stack:
 
-    1️⃣ Spring Boot;
-    2️⃣ Spring Web;
-    3️⃣ Spring Data;
-    4️⃣ PostgreSQL database;
-    5️⃣ Hibernate;
-    6️⃣ Spring Security (as basic authentication).
-    7️⃣ Docker 🐳
+    1️⃣ Spring Boot; 🍃🥾
+    2️⃣ Spring Web; 🍃🌐
+    3️⃣ Spring Data; 🍃📅
+    4️⃣ PostgreSQL database; 🐘📅
+    5️⃣ Hibernate; ⭕®️Ⓜ️
+    6️⃣ Spring Security (as basic authentication). 🪪
+    7️⃣ Postman 📮🚹
+    8️⃣ Docker 🐳📦
+    9️⃣ Log4j-2 Logging Framework 📜
+    🔟 JUnit | Mockito | AsserJ 🧪👻
 
 ##### To run this application use:
 
