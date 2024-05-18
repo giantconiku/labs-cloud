@@ -15,7 +15,7 @@ Technology stack:
     2️⃣ Spring Web; 🍃🌐
     3️⃣ Spring Data; 🍃📅
     4️⃣ PostgreSQL database; 🐘📅
-    5️⃣ Hibernate; ⭕®️Ⓜ️
+    5️⃣ Hibernate; ⭕(R)Ⓜ️
     6️⃣ Spring Security (as basic authentication). 🪪
     7️⃣ Postman 📮🚹
     8️⃣ Docker 🐳📦
